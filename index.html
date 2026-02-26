@@ -6,948 +6,594 @@
 <title>Internality — Feedback</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #000000;
-    --paper: #F3EFE5;
-    --gold: #C1B07F;
-    --gold-light: #d4c99a;
-    --blue: #1D3D9A;
-    --blue-dark: #1B1464;
-    --mint: #6FEEBE;
-    --muted: #6b6860;
-    --border: #ddd8cc;
-    --surface: #ffffff;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-  }
-  .view { display: none; }
-  .view.active { display: block; }
+:root {
+  --ink: #000000;
+  --paper: #F3EFE5;
+  --gold: #C1B07F;
+  --blue: #1D3D9A;
+  --blue-dark: #1B1464;
+  --mint: #6FEEBE;
+  --muted: #6b6860;
+  --border: #ddd8cc;
+  --surface: #ffffff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: 'Montserrat', sans-serif; font-weight: 300; min-height: 100vh; }
 
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 28px 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--blue);
-  }
-  .logo {
-    font-family: 'Source Serif 4', serif;
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--paper);
-  }
-  .logo span { color: #ffffff; }
-  .logo em { color: var(--gold) !important; font-style: italic; }
-  .admin-link {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(243,239,229,0.7);
-    cursor: pointer;
-    border: none;
-    background: none;
-    font-family: 'Montserrat', sans-serif;
-    transition: color 0.2s;
-  }
-  .admin-link:hover { color: var(--mint); }
+.view { display: none; }
+.view.active { display: block; }
 
-  .form-container {
-    max-width: 680px;
-    margin: 80px auto;
-    padding: 0 24px;
-  }
-  .form-header { margin-bottom: 60px; }
-  .form-header h1 {
-    font-family: 'Source Serif 4', serif;
-    font-size: clamp(36px, 5vw, 54px);
-    font-weight: 300;
-    line-height: 1.15;
-    margin-bottom: 16px;
-  }
-  .form-header h1 em { font-style: italic; color: var(--blue); }
-  .form-header p { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 480px; }
-  .divider { width: 48px; height: 2px; background: var(--blue); margin: 24px 0; }
+header { background: var(--blue); padding: 24px 48px; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 600; color: #fff; letter-spacing: 0.02em; }
+.admin-btn { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); cursor: pointer; border: none; background: none; font-family: 'Montserrat', sans-serif; transition: color 0.2s; }
+.admin-btn:hover { color: var(--mint); }
 
-  .question-block {
-    margin-bottom: 48px;
-    animation: fadeUp 0.5s ease both;
-  }
-  .question-block:nth-child(2) { animation-delay: 0.1s; }
-  .question-block:nth-child(3) { animation-delay: 0.2s; }
-  .question-block:nth-child(4) { animation-delay: 0.3s; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+.form-wrap { max-width: 660px; margin: 72px auto; padding: 0 24px; }
+.form-eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 500; margin-bottom: 12px; }
+.form-headline { font-family: 'Source Serif 4', serif; font-size: clamp(32px,5vw,50px); font-weight: 300; line-height: 1.2; margin-bottom: 16px; }
+.form-headline em { font-style: italic; color: var(--blue); }
+.divider { width: 40px; height: 2px; background: var(--blue); margin: 20px 0; }
+.form-intro { color: var(--muted); font-size: 14px; line-height: 1.8; max-width: 460px; margin-bottom: 48px; }
 
-  .q-label {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--blue);
-    margin-bottom: 10px;
-    font-weight: 500;
-  }
-  .q-text {
-    font-family: 'Source Serif 4', serif;
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 1.4;
-    margin-bottom: 20px;
-    color: var(--ink);
-  }
+.q-block { margin-bottom: 40px; }
+.q-num { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--blue); font-weight: 500; margin-bottom: 8px; }
+.q-text { font-family: 'Source Serif 4', serif; font-size: 20px; font-weight: 400; line-height: 1.4; margin-bottom: 16px; }
 
-  .scale-group { display: flex; gap: 10px; margin-bottom: 8px; }
-  .scale-btn {
-    width: 44px; height: 44px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    border-radius: 2px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--ink);
-  }
-  .scale-btn:hover { border-color: var(--blue); color: var(--blue); }
-  .scale-btn.selected { background: var(--blue); border-color: var(--blue); color: white; }
-  .scale-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-    padding: 0 2px;
-    max-width: 254px;
-  }
+input[type="text"], input[type="password"], textarea {
+  width: 100%; border: 1px solid var(--border); border-radius: 2px;
+  padding: 13px 16px; font-family: 'Montserrat', sans-serif; font-size: 14px;
+  font-weight: 300; color: var(--ink); background: var(--surface); transition: border-color 0.2s;
+}
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus { outline: none; border-color: var(--blue); }
+input[type="text"]::placeholder, input[type="password"]::placeholder, textarea::placeholder { color: var(--muted); }
+textarea { resize: vertical; line-height: 1.7; }
 
-  textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    border-radius: 2px;
-    padding: 16px 18px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--ink);
-    resize: vertical;
-    min-height: 100px;
-    transition: border-color 0.2s;
-    line-height: 1.7;
-  }
-  textarea:focus { outline: none; border-color: var(--blue); }
-  textarea::placeholder { color: var(--muted); }
-  .optional-comment { margin-top: 14px; }
-  .optional-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.scale-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.scale-btn { width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 2px; background: var(--surface); font-family: 'Montserrat', sans-serif; font-size: 15px; cursor: pointer; transition: all 0.15s; color: var(--ink); }
+.scale-btn:hover { border-color: var(--blue); color: var(--blue); }
+.scale-btn.selected { background: var(--blue); border-color: var(--blue); color: #fff; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); max-width: 264px; padding: 0 2px; }
+.opt-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
 
-  input[type="text"] {
-    width: 100%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    border-radius: 2px;
-    padding: 14px 18px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--ink);
-    transition: border-color 0.2s;
-  }
-  input[type="text"]:focus { outline: none; border-color: var(--blue); }
-  input[type="text"]::placeholder { color: var(--muted); }
+.field-error { font-size: 12px; color: #c0392b; margin-top: 6px; display: none; }
 
-  .submit-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    padding: 16px 36px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 2px;
-    margin-top: 16px;
-    transition: background 0.2s;
-  }
-  .submit-btn:hover { background: var(--blue-dark); }
-  .submit-btn:disabled { background: var(--muted); cursor: not-allowed; }
-  .submit-btn .arrow { transition: transform 0.2s; }
-  .submit-btn:hover:not(:disabled) .arrow { transform: translateX(4px); }
+.submit-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: var(--paper); border: none; padding: 15px 34px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; margin-top: 8px; transition: background 0.2s; }
+.submit-btn:hover { background: var(--blue); }
+.submit-btn:disabled { background: var(--muted); cursor: not-allowed; }
 
-  .error-msg {
-    margin-top: 12px;
-    font-size: 13px;
-    color: #c0392b;
-    display: none;
-  }
+.thankyou { text-align: center; padding: 100px 24px; max-width: 480px; margin: 0 auto; }
+.thankyou .mark { font-size: 36px; margin-bottom: 20px; color: var(--blue); }
+.thankyou h2 { font-family: 'Source Serif 4', serif; font-size: 36px; font-weight: 300; margin-bottom: 16px; }
+.thankyou p { color: var(--muted); line-height: 1.8; font-size: 15px; }
 
-  .thankyou {
-    text-align: center;
-    padding: 80px 24px;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-  .thankyou .check { font-size: 40px; margin-bottom: 24px; }
-  .thankyou h2 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 36px;
-    font-weight: 300;
-    margin-bottom: 16px;
-  }
-  .thankyou p { color: var(--muted); line-height: 1.7; }
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 44px 40px; max-width: 380px; width: 90%; text-align: center; }
+.modal-box h3 { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 300; margin-bottom: 8px; }
+.modal-box p { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+.modal-input { width: 100%; border: 1px solid var(--border); border-radius: 2px; padding: 13px 16px; font-family: 'Montserrat', sans-serif; font-size: 14px; text-align: center; letter-spacing: 0.05em; margin-bottom: 10px; transition: border-color 0.2s; }
+.modal-input:focus { outline: none; border-color: var(--blue); }
+.modal-error { font-size: 12px; color: #c0392b; margin-bottom: 10px; min-height: 18px; }
+.modal-submit { width: 100%; background: var(--blue); color: #fff; border: none; padding: 14px; font-family: 'Montserrat', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; margin-bottom: 10px; transition: background 0.2s; }
+.modal-submit:hover { background: var(--blue-dark); }
+.modal-cancel { font-size: 12px; color: var(--muted); cursor: pointer; border: none; background: none; font-family: 'Montserrat', sans-serif; }
 
-  /* ── ADMIN ── */
-  .admin-container { max-width: 860px; margin: 0 auto; padding: 48px 24px; }
-  .admin-header {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    margin-bottom: 48px; flex-wrap: wrap; gap: 16px;
-  }
-  .admin-header h2 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 36px; font-weight: 300;
-  }
+/* ADMIN */
+.admin-wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px; }
+.admin-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; }
+.admin-top h2 { font-family: 'Source Serif 4', serif; font-size: 34px; font-weight: 300; margin-top: 8px; }
+.back-btn { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); cursor: pointer; border: none; background: none; font-family: 'Montserrat', sans-serif; }
+.back-btn:hover { color: var(--blue); }
+.admin-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tabs { display: flex; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.tab { padding: 10px 18px; background: var(--surface); border: none; border-right: 1px solid var(--border); font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: var(--muted); transition: all 0.15s; }
+.tab:last-child { border-right: none; }
+.tab.active { background: var(--blue); color: #fff; }
+.export-btn { display: inline-flex; align-items: center; gap: 6px; background: transparent; color: var(--ink); border: 1px solid var(--border); padding: 10px 18px; font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: all 0.15s; }
+.export-btn:hover { border-color: var(--blue); color: var(--blue); }
 
-  .setup-banner {
-    background: #fffbf0;
-    border: 1px solid #e8d5a0;
-    border-radius: 2px;
-    padding: 20px 24px;
-    margin-bottom: 32px;
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .setup-banner strong { font-weight: 500; }
-  .setup-banner a { color: var(--blue); text-decoration: underline; }
-  .setup-url-row {
-    display: flex; gap: 10px; align-items: center; margin-top: 12px;
-  }
-  .setup-url-input {
-    flex: 1;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 10px 14px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    color: var(--ink);
-    background: white;
-  }
-  .setup-url-input:focus { outline: none; border-color: var(--blue); }
-  .connect-btn {
-    background: var(--ink); color: white;
-    border: none; padding: 10px 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px; letter-spacing: 0.1em;
-    text-transform: uppercase; cursor: pointer;
-    border-radius: 2px; transition: background 0.15s;
-    white-space: nowrap;
-  }
-  .connect-btn:hover { background: var(--blue-dark); }
-  .connected-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #e8f5ee; border: 1px solid #a8d5b5;
-    padding: 6px 12px; border-radius: 20px;
-    font-size: 12px; color: #2d7a4f;
-  }
+.panel { display: none; }
+.panel.active { display: block; }
 
-  .tabs {
-    display: flex; gap: 0;
-    border: 1px solid var(--border); border-radius: 2px; overflow: hidden;
-  }
-  .tab-btn {
-    padding: 10px 24px;
-    background: var(--surface); border: none;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-    cursor: pointer; color: var(--muted); transition: all 0.15s;
-    border-right: 1px solid var(--border);
-  }
-  .tab-btn:last-child { border-right: none; }
-  .tab-btn.active { background: var(--ink); color: white; }
+.resp-count { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.resp-count strong { color: var(--ink); }
+.resp-card { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 28px 30px; margin-bottom: 14px; }
+.resp-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.resp-name { font-family: 'Source Serif 4', serif; font-size: 20px; }
+.resp-date { font-size: 12px; color: var(--muted); }
+.resp-item { margin-bottom: 18px; }
+.resp-q { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.resp-a { font-size: 14px; line-height: 1.6; }
+.resp-score { font-family: 'Source Serif 4', serif; font-size: 30px; color: var(--blue); font-weight: 300; }
+.empty { text-align: center; padding: 60px 24px; color: var(--muted); }
+.empty h3 { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 300; color: var(--ink); margin: 12px 0 8px; }
 
-  .response-count { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
-  .response-count strong { color: var(--ink); font-weight: 500; }
+.editor-card { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 24px 28px; margin-bottom: 14px; }
+.editor-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.editor-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--blue); font-weight: 500; }
+.editor-badge { font-size: 11px; background: var(--paper); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; color: var(--muted); }
+.editor-input { width: 100%; border: 1px solid var(--border); border-radius: 2px; padding: 11px 14px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 300; color: var(--ink); background: var(--paper); margin-bottom: 10px; transition: border-color 0.2s; }
+.editor-input:focus { outline: none; border-color: var(--blue); background: #fff; }
+.type-select { border: 1px solid var(--border); border-radius: 2px; padding: 8px 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; background: var(--paper); color: var(--ink); cursor: pointer; }
+.type-select:focus { outline: none; border-color: var(--blue); }
+.q-actions { display: flex; align-items: center; gap: 6px; }
+.icon-btn { background: none; border: 1px solid var(--border); border-radius: 2px; width: 30px; height: 30px; cursor: pointer; font-size: 13px; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.icon-btn:hover { border-color: var(--blue); color: var(--blue); }
+.icon-btn.del { border-color: #e0b0b0; color: #c0392b; }
+.icon-btn.del:hover { background: #fdf0f0; }
 
-  .response-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 2px; padding: 28px 32px; margin-bottom: 16px;
-    animation: fadeUp 0.3s ease both;
-  }
-  .response-card-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
-  }
-  .respondent-name { font-family: 'Source Serif 4', serif; font-size: 20px; font-weight: 400; }
-  .response-date { font-size: 12px; color: var(--muted); }
-  .response-item { margin-bottom: 20px; }
-  .response-q { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .response-a { font-size: 15px; line-height: 1.6; color: var(--ink); }
-  .score-display { display: inline-flex; align-items: center; gap: 8px; }
-  .score-num { font-family: 'Source Serif 4', serif; font-size: 28px; color: var(--blue); font-weight: 300; }
-  .score-max { font-size: 13px; color: var(--muted); }
+.add-q-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: transparent; color: var(--blue); border: 1px dashed var(--blue); padding: 14px; font-family: 'Montserrat', sans-serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: all 0.15s; margin-top: 4px; }
+.add-q-btn:hover { background: #f0f4ff; }
 
-  .empty-state { text-align: center; padding: 64px 24px; color: var(--muted); }
-  .empty-state .icon { font-size: 36px; margin-bottom: 16px; }
-  .empty-state h3 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 24px; font-weight: 300; margin-bottom: 8px; color: var(--ink);
-  }
+.save-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--paper); border: none; padding: 12px 28px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; margin-top: 16px; transition: background 0.2s; }
+.save-btn:hover { background: var(--blue); }
+.saved-msg { font-size: 12px; color: #2d7a4f; margin-left: 14px; opacity: 0; transition: opacity 0.3s; }
+.saved-msg.show { opacity: 1; }
 
-  /* Questions editor */
-  .question-editor {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 2px; padding: 32px; margin-bottom: 16px;
-  }
-  .question-editor-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-  }
-  .q-num { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--blue); font-weight: 500; }
-  .q-type-badge {
-    font-size: 11px; background: var(--paper); border: 1px solid var(--border);
-    padding: 4px 10px; border-radius: 20px; color: var(--muted); letter-spacing: 0.05em;
-  }
-  .editor-input {
-    width: 100%; border: 1px solid var(--border); border-radius: 2px;
-    padding: 12px 16px; font-family: 'Montserrat', sans-serif;
-    font-size: 15px; font-weight: 300; color: var(--ink);
-    transition: border-color 0.2s; background: var(--paper); margin-bottom: 12px;
-  }
-  .editor-input:focus { outline: none; border-color: var(--blue); background: white; }
-  .type-select {
-    border: 1px solid var(--border); border-radius: 2px; padding: 8px 12px;
-    font-family: 'Montserrat', sans-serif; font-size: 13px; background: var(--paper); color: var(--ink); cursor: pointer;
-  }
-  .type-select:focus { outline: none; border-color: var(--blue); }
-  .save-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--ink); color: var(--paper); border: none;
-    padding: 12px 28px; font-family: 'Montserrat', sans-serif;
-    font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
-    cursor: pointer; border-radius: 2px; margin-top: 8px; transition: background 0.2s;
-  }
-  .save-btn:hover { background: var(--blue-dark); }
-  .saved-msg {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 12px; color: #4a9e6b; margin-left: 16px;
-    opacity: 0; transition: opacity 0.3s;
-  }
-  .saved-msg.show { opacity: 1; }
+.setup-banner { background: #fffbf0; border: 1px solid #e8d5a0; border-radius: 2px; padding: 20px 24px; margin-bottom: 20px; font-size: 14px; line-height: 1.8; }
+.setup-banner strong { font-weight: 500; }
+.setup-banner a { color: var(--blue); }
+.setup-row { display: flex; gap: 10px; align-items: center; }
+.setup-input { flex: 1; border: 1px solid var(--border); border-radius: 2px; padding: 10px 14px; font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--ink); background: #fff; }
+.setup-input:focus { outline: none; border-color: var(--blue); }
+.connect-btn { background: var(--blue); color: #fff; border: none; padding: 10px 20px; font-family: 'Montserrat', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: background 0.15s; white-space: nowrap; }
+.connect-btn:hover { background: var(--blue-dark); }
+.connected-badge { display: inline-flex; align-items: center; gap: 6px; background: #e8f5ee; border: 1px solid #a8d5b5; padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #2d7a4f; margin-bottom: 16px; }
+hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
 
-  .back-link {
-    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--muted); cursor: pointer; border: none; background: none;
-    font-family: 'Montserrat', sans-serif; transition: color 0.2s;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .back-link:hover { color: var(--blue); }
-
-  .export-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: transparent; color: var(--ink); border: 1px solid var(--border);
-    padding: 10px 20px; font-family: 'Montserrat', sans-serif;
-    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-    cursor: pointer; border-radius: 2px; transition: all 0.15s;
-  }
-  .export-btn:hover { border-color: var(--blue); color: var(--blue); }
-
-  @media (max-width: 600px) {
-    header { padding: 20px 24px; }
-    .form-container { margin: 48px auto; }
-    .scale-group { flex-wrap: wrap; }
-  }
+@media (max-width: 600px) {
+  header { padding: 20px; }
+  .form-wrap, .admin-wrap { padding: 32px 16px; }
+}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">Internality</div>
-  <button class="admin-link" onclick="showAdmin()">Admin ↗</button>
+  <button class="admin-btn" onclick="openPasswordModal()">Admin ↗</button>
 </header>
 
 <!-- PASSWORD MODAL -->
-<div id="password-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; display:none; align-items:center; justify-content:center;">
-  <div style="background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:40px; max-width:400px; width:90%; text-align:center;">
-    <div style="font-family:'Source Serif 4',serif; font-size:24px; font-weight:300; margin-bottom:8px;" id="modal-title">Admin Access</div>
-    <p style="font-size:13px; color:var(--muted); margin-bottom:24px;" id="modal-subtitle">Enter your password to continue.</p>
-    <input type="password" id="password-input" placeholder="Password" style="width:100%; border:1px solid var(--border); border-radius:2px; padding:12px 16px; font-family:'Montserrat',sans-serif; font-size:14px; margin-bottom:8px; text-align:center; letter-spacing:0.1em;">
-    <div id="password-error" style="font-size:12px; color:#c0392b; margin-bottom:12px; display:none;">Incorrect password. Try again.</div>
-    <input type="password" id="password-confirm" placeholder="Confirm password" style="width:100%; border:1px solid var(--border); border-radius:2px; padding:12px 16px; font-family:'Montserrat',sans-serif; font-size:14px; margin-bottom:16px; text-align:center; letter-spacing:0.1em; display:none;">
-    <button onclick="submitPassword()" style="width:100%; background:var(--blue); color:white; border:none; padding:14px; font-family:'Montserrat',sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px;">Continue →</button>
-    <button onclick="closeModal()" style="margin-top:12px; background:none; border:none; font-size:12px; color:var(--muted); cursor:pointer; font-family:'Montserrat',sans-serif;">Cancel</button>
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <h3 id="modal-title">Admin Access</h3>
+    <p id="modal-subtitle">Enter your password to continue.</p>
+    <input type="password" class="modal-input" id="modal-pw" placeholder="Password">
+    <input type="password" class="modal-input" id="modal-pw2" placeholder="Confirm password" style="display:none;">
+    <div class="modal-error" id="modal-error"></div>
+    <button class="modal-submit" onclick="handlePassword()">Continue →</button>
+    <button class="modal-cancel" onclick="closePasswordModal()">Cancel</button>
   </div>
 </div>
 
-<!-- FORM VIEW -->
+<!-- FORM -->
 <div id="view-form" class="view active">
-  <div class="form-container">
-    <div class="form-header">
-      <div class="q-label" id="form-eyebrow"></div>
-      <h1 id="form-headline"></h1>
-      <div class="divider"></div>
-      <p id="form-intro"></p>
+  <div class="form-wrap">
+    <div class="form-eyebrow" id="f-eyebrow">Internality Website</div>
+    <h1 class="form-headline" id="f-headline">We'd value <em>your perspective.</em></h1>
+    <div class="divider"></div>
+    <p class="form-intro" id="f-intro">Three brief questions about our website. Your input helps us communicate more effectively.</p>
+
+    <div class="q-block">
+      <div class="q-num">Your Name <span style="color:#c0392b">*</span></div>
+      <input type="text" id="f-name" placeholder="Name &amp; Title">
+      <div class="field-error" id="name-err">Please enter your name to continue.</div>
     </div>
 
-    <div class="question-block">
-      <div class="q-label">Your Name <span style="color:#c0392b;">*</span></div>
-      <input type="text" id="respondent-name" placeholder="Name & Title">
-      <div id="name-error" style="display:none; font-size:12px; color:#c0392b; margin-top:6px;">Please enter your name to continue.</div>
-    </div>
+    <div id="questions-container"></div>
 
-    <div id="questions-form"></div>
-
-    <button class="submit-btn" id="submit-btn" onclick="submitForm()">
-      Submit Feedback <span class="arrow">→</span>
-    </button>
-    <div class="error-msg" id="error-msg">Something went wrong. Please try again.</div>
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit Feedback →</button>
   </div>
 </div>
 
-<!-- THANK YOU VIEW -->
+<!-- THANK YOU -->
 <div id="view-thanks" class="view">
   <div class="thankyou">
-    <div class="check">✦</div>
+    <div class="mark">✦</div>
     <h2>Thank you.</h2>
-    <p>Your feedback has been received and will help us build a more effective platform. We appreciate you taking the time.</p>
+    <p id="thanks-msg">Your feedback has been received. We appreciate you taking the time.</p>
   </div>
 </div>
 
-<!-- ADMIN VIEW -->
+<!-- ADMIN -->
 <div id="view-admin" class="view">
-  <div class="admin-container">
-    <div class="admin-header">
+  <div class="admin-wrap">
+    <div class="admin-top">
       <div>
-        <button class="back-link" onclick="showForm()">← Back to form</button>
-        <h2 style="margin-top:12px">Admin Dashboard</h2>
+        <button class="back-btn" onclick="goForm()">← Back to form</button>
+        <h2>Admin Dashboard</h2>
       </div>
-      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <div class="admin-actions">
         <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
         <div class="tabs">
-          <button class="tab-btn active" id="tab-responses" onclick="switchTab('responses')">Responses</button>
-          <button class="tab-btn" id="tab-content" onclick="switchTab('content')">Edit Content</button>
-          <button class="tab-btn" id="tab-questions" onclick="switchTab('questions')">Edit Questions</button>
-          <button class="tab-btn" id="tab-setup" onclick="switchTab('setup')">⚙ Setup</button>
+          <button class="tab active" id="tab-responses" onclick="switchTab('responses')">Responses</button>
+          <button class="tab" id="tab-content"   onclick="switchTab('content')">Content</button>
+          <button class="tab" id="tab-questions" onclick="switchTab('questions')">Questions</button>
+          <button class="tab" id="tab-setup"     onclick="switchTab('setup')">Setup</button>
         </div>
       </div>
     </div>
 
-    <!-- RESPONSES PANEL -->
-    <div id="panel-responses">
-      <div class="response-count" id="response-count"></div>
-      <div id="responses-list"></div>
+    <div class="panel active" id="panel-responses">
+      <div class="resp-count" id="resp-count"></div>
+      <div id="resp-list"></div>
     </div>
 
-    <!-- CONTENT PANEL -->
-    <div id="panel-content" style="display:none;">
-      <div style="max-width:600px;">
-        <div class="question-editor">
-          <div class="question-editor-header">
-            <div class="q-num">Eyebrow Label</div>
-            <span class="q-type-badge">Small text above headline</span>
-          </div>
-          <input class="editor-input" id="content-eyebrow" placeholder="e.g. Internality Website">
+    <div class="panel" id="panel-content">
+      <div style="max-width:580px;">
+        <div class="editor-card">
+          <div class="editor-head"><div class="editor-label">Eyebrow label</div><span class="editor-badge">Small text above headline</span></div>
+          <input class="editor-input" id="c-eyebrow" placeholder="e.g. Internality Website">
         </div>
-        <div class="question-editor">
-          <div class="question-editor-header">
-            <div class="q-num">Headline</div>
-            <span class="q-type-badge">Main heading</span>
-          </div>
-          <input class="editor-input" id="content-headline" placeholder="e.g. We'd value your perspective.">
+        <div class="editor-card">
+          <div class="editor-head"><div class="editor-label">Headline</div><span class="editor-badge">Main heading</span></div>
+          <input class="editor-input" id="c-headline" placeholder="e.g. We'd value your perspective.">
         </div>
-        <div class="question-editor">
-          <div class="question-editor-header">
-            <div class="q-num">Intro Text</div>
-            <span class="q-type-badge">Paragraph below headline</span>
-          </div>
-          <textarea class="editor-input" id="content-intro" rows="3" style="resize:vertical;" placeholder="e.g. Three brief questions about our website…"></textarea>
+        <div class="editor-card">
+          <div class="editor-head"><div class="editor-label">Intro paragraph</div><span class="editor-badge">Below headline</span></div>
+          <textarea class="editor-input" id="c-intro" rows="3" style="resize:vertical;"></textarea>
         </div>
-        <div class="question-editor">
-          <div class="question-editor-header">
-            <div class="q-num">Thank You Message</div>
-            <span class="q-type-badge">Shown after submission</span>
-          </div>
-          <textarea class="editor-input" id="content-thankyou" rows="3" style="resize:vertical;" placeholder="e.g. Your feedback has been received…"></textarea>
+        <div class="editor-card">
+          <div class="editor-head"><div class="editor-label">Thank you message</div><span class="editor-badge">After submission</span></div>
+          <textarea class="editor-input" id="c-thanks" rows="3" style="resize:vertical;"></textarea>
         </div>
         <button class="save-btn" onclick="saveContent()">Save Content</button>
-        <span class="saved-msg" id="saved-content-msg">✓ Saved</span>
+        <span class="saved-msg" id="saved-content">✓ Saved</span>
       </div>
     </div>
 
-    <!-- QUESTIONS PANEL -->
-    <div id="panel-questions" style="display:none;">
-      <div id="questions-editor"></div>
+    <div class="panel" id="panel-questions">
+      <div id="q-editor"></div>
+      <button class="add-q-btn" onclick="addQuestion()">+ Add Question</button>
+      <br>
       <button class="save-btn" onclick="saveQuestions()">Save Questions</button>
-      <span class="saved-msg" id="saved-msg">✓ Saved</span>
+      <span class="saved-msg" id="saved-questions">✓ Saved</span>
     </div>
 
-    <!-- SETUP PANEL -->
-    <div id="panel-setup" style="display:none;">
-      <div style="max-width:600px;">
+    <div class="panel" id="panel-setup">
+      <div style="max-width:580px;">
         <div class="setup-banner">
           <strong>Connect to Google Sheets</strong><br><br>
-          Follow these steps once to get your responses automatically saved to a Google Sheet:<br><br>
-          <strong>1.</strong> Open <a href="https://sheets.google.com" target="_blank">Google Sheets</a> and create a new spreadsheet.<br>
+          <strong>1.</strong> Open <a href="https://sheets.google.com" target="_blank">Google Sheets</a> → create a new spreadsheet.<br>
           <strong>2.</strong> Click <strong>Extensions → Apps Script</strong>.<br>
-          <strong>3.</strong> Delete all existing code and paste in the contents of <code>google-apps-script.js</code>.<br>
+          <strong>3.</strong> Delete all code, paste in <code>google-apps-script.js</code>.<br>
           <strong>4.</strong> Click <strong>Deploy → New deployment → Web app</strong>.<br>
-          <strong>5.</strong> Set "Who has access" to <strong>Anyone</strong>. Click Deploy and authorize.<br>
-          <strong>6.</strong> Copy the Web App URL and paste it below.
+          <strong>5.</strong> Set "Who has access" to <strong>Anyone</strong> → Deploy &amp; authorize.<br>
+          <strong>6.</strong> Copy the Web App URL and paste below.
         </div>
-
-        <div id="connection-status"></div>
-
-        <div class="setup-url-row">
-          <input class="setup-url-input" id="sheets-url" placeholder="https://script.google.com/macros/s/…/exec" />
+        <div id="sheet-status"></div>
+        <div class="setup-row">
+          <input class="setup-input" id="sheet-url" placeholder="https://script.google.com/macros/s/…/exec">
           <button class="connect-btn" onclick="saveSheetURL()">Connect</button>
         </div>
-        <p style="font-size:12px; color:var(--muted); margin-top:10px;">This URL is stored in your browser and never shared.</p>
-        <div style="margin-top:32px; padding-top:24px; border-top:1px solid var(--border);">
-          <div class="q-num" style="margin-bottom:12px;">Change Admin Password</div>
-          <div class="setup-url-row">
-            <input type="password" class="setup-url-input" id="new-password" placeholder="New password" />
-            <button class="connect-btn" onclick="changePassword()">Update</button>
-          </div>
-          <div id="pw-change-msg" style="font-size:12px; color:#2d7a4f; margin-top:8px; display:none;">✓ Password updated</div>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px;">Stored in your browser only.</p>
+        <hr class="sep">
+        <div class="editor-label" style="margin-bottom:12px;">Change Admin Password</div>
+        <div class="setup-row">
+          <input type="password" class="setup-input" id="new-pw" placeholder="New password">
+          <button class="connect-btn" onclick="updatePassword()">Update</button>
         </div>
+        <div id="pw-saved" style="font-size:12px;color:#2d7a4f;margin-top:8px;display:none;">✓ Password updated</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ── CONFIG — paste your Apps Script URL here OR enter it in Admin → Setup ──
-const HARDCODED_URL = ""; // Optional: paste URL directly here
+// ── KEYS ──
+const K = {
+  q:   'int_q_v4',
+  r:   'int_responses',
+  c:   'int_content',
+  pw:  'int_pw',
+  url: 'int_sheet_url'
+};
 
-// ── DEFAULT QUESTIONS ──
-const DEFAULT_QUESTIONS = [
-  { id: 'q1', text: 'How clearly did the platform communicate its value to your organization?', type: 'scale', scaleMin: 'Not at all clear', scaleMax: 'Extremely clear' },
-  { id: 'q2', text: 'What, if anything, was unclear or missing from what you saw?', type: 'text' },
-  { id: 'q3', text: 'How likely are you to explore Internality further?', type: 'scale', scaleMin: 'Not likely', scaleMax: 'Very likely' }
+const SHEET_HARDCODED = '';
+
+const DEFAULT_Q = [
+  { id:'q1', text:'How clearly did the website communicate the value of Internality?', type:'scale', scaleMin:'Not at all clear', scaleMax:'Extremely clear' },
+  { id:'q2', text:'What, if anything, was unclear or missing from what you saw?', type:'text' },
+  { id:'q3', text:'How likely are you to explore Internality further?', type:'scale', scaleMin:'Not likely', scaleMax:'Very likely' }
 ];
 
-// ── STATE ──
-let questions = loadQuestions();
-let responses = loadResponses();
-let formAnswers = {};
+const DEFAULT_C = {
+  eyebrow:  'Internality Website',
+  headline: "We'd value <em>your perspective.</em>",
+  intro:    'Three brief questions about our website. Your input helps us communicate more effectively.',
+  thanks:   'Your feedback has been received. We appreciate you taking the time.'
+};
 
-function getSheetURL() {
-  return HARDCODED_URL || localStorage.getItem('internality_sheet_url') || '';
-}
-function loadQuestions() {
-  try { const s = localStorage.getItem('internality_questions_v2'); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_QUESTIONS)); } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_QUESTIONS)); }
-}
-function loadResponses() {
-  try { const s = localStorage.getItem('internality_responses'); return s ? JSON.parse(s) : []; } catch(e) { return []; }
-}
-function saveResponsesToStorage() {
-  try { localStorage.setItem('internality_responses', JSON.stringify(responses)); } catch(e) {}
-}
+// ── LOAD / SAVE ──
+function ls(key, fallback) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch(e) { return fallback; } }
+function ss(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
+
+let Qs = ls(K.q, JSON.parse(JSON.stringify(DEFAULT_Q)));
+let Rs = ls(K.r, []);
+let C  = ls(K.c, { ...DEFAULT_C });
+let A  = {}; // current form answers
+
+function getSheetURL() { return SHEET_HARDCODED || localStorage.getItem(K.url) || ''; }
+function getPW()       { return localStorage.getItem(K.pw) || ''; }
 
 // ── RENDER FORM ──
 function renderForm() {
-  const container = document.getElementById('questions-form');
-  container.innerHTML = '';
-  formAnswers = {};
-  questions.forEach((q, i) => {
-    const block = document.createElement('div');
-    block.className = 'question-block';
-    block.style.animationDelay = (i * 0.1 + 0.1) + 's';
-    let inputHTML = '';
+  document.getElementById('f-eyebrow').textContent  = C.eyebrow;
+  document.getElementById('f-headline').innerHTML   = C.headline;
+  document.getElementById('f-intro').textContent    = C.intro;
+  document.getElementById('thanks-msg').textContent = C.thanks;
+  document.getElementById('f-name').value = '';
+  document.getElementById('name-err').style.display = 'none';
+  A = {};
+
+  const wrap = document.getElementById('questions-container');
+  wrap.innerHTML = '';
+  Qs.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'q-block';
+    let inp = '';
     if (q.type === 'scale') {
       let btns = '';
-      for (let n = 1; n <= 5; n++) {
-        btns += `<button class="scale-btn" data-q="${q.id}" data-val="${n}" onclick="selectScale('${q.id}', ${n}, this)">${n}</button>`;
-      }
-      inputHTML = `
-        <div class="scale-group">${btns}</div>
-        <div class="scale-labels" style="max-width:${5*44+4*10}px">
-          <span>${q.scaleMin || 'Low'}</span><span>${q.scaleMax || 'High'}</span>
-        </div>
-        <div class="optional-comment">
-          <div class="optional-label">Comment (optional)</div>
-          <textarea placeholder="Any additional thoughts…" oninput="formAnswers['${q.id}_comment']=this.value" rows="3"></textarea>
-        </div>`;
+      for (let n=1;n<=5;n++) btns += `<button class="scale-btn" data-qid="${q.id}" onclick="pickScale('${q.id}',${n},this)">${n}</button>`;
+      inp = `<div class="scale-row">${btns}</div>
+             <div class="scale-labels"><span>${q.scaleMin||'Low'}</span><span>${q.scaleMax||'High'}</span></div>
+             <div class="opt-label">Comment (optional)</div>
+             <textarea rows="2" placeholder="Any additional thoughts…" oninput="A['${q.id}_c']=this.value"></textarea>`;
     } else if (q.type === 'short') {
-      inputHTML = `<input type="text" placeholder="Your answer…" oninput="formAnswers['${q.id}']=this.value" style="width:100%;">`;
+      inp = `<input type="text" placeholder="Your answer…" oninput="A['${q.id}']=this.value">`;
     } else {
-      inputHTML = `<textarea placeholder="Your response…" oninput="formAnswers['${q.id}']=this.value" rows="4"></textarea>`;
+      inp = `<textarea rows="4" placeholder="Your response…" oninput="A['${q.id}']=this.value"></textarea>`;
     }
-    block.innerHTML = `<div class="q-label">Question ${i + 1}</div><div class="q-text">${q.text}</div>${inputHTML}`;
-    container.appendChild(block);
+    div.innerHTML = `<div class="q-num">Question ${i+1}</div><div class="q-text">${q.text}</div>${inp}`;
+    wrap.appendChild(div);
   });
 }
 
-function selectScale(qId, val, btn) {
-  formAnswers[qId] = val;
-  document.querySelectorAll(`[data-q="${qId}"]`).forEach(b => b.classList.remove('selected'));
+function pickScale(qId, val, btn) {
+  A[qId] = val;
+  document.querySelectorAll(`[data-qid="${qId}"]`).forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
 }
 
 // ── SUBMIT ──
 async function submitForm() {
-  const name = document.getElementById('respondent-name').value.trim();
-  const nameError = document.getElementById('name-error');
-
+  const name = document.getElementById('f-name').value.trim();
   if (!name) {
-    nameError.style.display = 'block';
-    document.getElementById('respondent-name').focus();
+    document.getElementById('name-err').style.display = 'block';
+    document.getElementById('f-name').focus();
     return;
   }
-  nameError.style.display = 'none';
+  document.getElementById('name-err').style.display = 'none';
   const btn = document.getElementById('submit-btn');
-  const errEl = document.getElementById('error-msg');
-  errEl.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Sending…';
 
+  const entry = { name, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), answers:{} };
   const payload = { name };
-  questions.forEach(q => {
+  Qs.forEach(q => {
     if (q.type === 'scale') {
-      payload[`${q.id}_score`] = formAnswers[q.id] || null;
-      payload[`${q.id}_comment`] = formAnswers[q.id + '_comment'] || '';
+      entry.answers[q.id] = { score: A[q.id]||null, comment: A[q.id+'_c']||'' };
+      payload[q.id+'_score']   = A[q.id]||null;
+      payload[q.id+'_comment'] = A[q.id+'_c']||'';
     } else {
-      payload[`${q.id}_text`] = formAnswers[q.id] || '';
+      entry.answers[q.id] = { text: A[q.id]||'' };
+      payload[q.id+'_text'] = A[q.id]||'';
     }
   });
+  Rs.push(entry); ss(K.r, Rs);
 
-  // Save locally too (fallback)
-  const entry = { name, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), answers: {} };
-  questions.forEach(q => {
-    if (q.type === 'scale') entry.answers[q.id] = { score: formAnswers[q.id] || null, comment: formAnswers[q.id + '_comment'] || '' };
-    else entry.answers[q.id] = { text: formAnswers[q.id] || '' };
-  });
-  responses.push(entry);
-  saveResponsesToStorage();
-
-  // Send to Google Sheets if URL is configured
   const url = getSheetURL();
   if (url) {
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-    try {
-      await fetch(url, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } catch(e) {
-      console.warn('Sheet sync failed:', e);
-    }
-    btn.disabled = false;
-    btn.innerHTML = 'Submit Feedback <span class="arrow">→</span>';
+    try { await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }
+    catch(e) { console.warn(e); }
   }
-
+  btn.disabled = false; btn.innerHTML = 'Submit Feedback →';
   showView('view-thanks');
 }
 
-// ── ADMIN RESPONSES ──
+// ── PASSWORD MODAL ──
+function openPasswordModal() {
+  const hasPw = !!getPW();
+  document.getElementById('modal-title').textContent    = hasPw ? 'Admin Access' : 'Set Admin Password';
+  document.getElementById('modal-subtitle').textContent = hasPw ? 'Enter your password to continue.' : 'Choose a password to protect your admin panel.';
+  document.getElementById('modal-pw').value  = '';
+  document.getElementById('modal-pw2').value = '';
+  document.getElementById('modal-pw2').style.display = hasPw ? 'none' : 'block';
+  document.getElementById('modal-error').textContent = '';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('modal-pw').focus(), 100);
+}
+function closePasswordModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function handlePassword() {
+  const pw  = document.getElementById('modal-pw').value;
+  const pw2 = document.getElementById('modal-pw2').value;
+  const err = document.getElementById('modal-error');
+  const stored = getPW();
+  if (!stored) {
+    if (!pw)       { err.textContent='Please enter a password.'; return; }
+    if (pw !== pw2){ err.textContent='Passwords do not match.';  return; }
+    localStorage.setItem(K.pw, pw);
+    closePasswordModal(); openAdmin();
+  } else {
+    if (pw !== stored) { err.textContent='Incorrect password.'; document.getElementById('modal-pw').value=''; return; }
+    closePasswordModal(); openAdmin();
+  }
+}
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter' && document.getElementById('modal-overlay').classList.contains('open')) handlePassword();
+});
+
+// ── ADMIN: RESPONSES ──
 function renderResponses() {
-  const list = document.getElementById('responses-list');
-  const count = document.getElementById('response-count');
-  const sheetConnected = !!getSheetURL();
-  count.innerHTML = `<strong>${responses.length}</strong> response${responses.length !== 1 ? 's' : ''} stored locally${sheetConnected ? ' · <span style="color:#2d7a4f">✓ Google Sheets connected</span>' : ' · <span style="color:var(--muted)">Google Sheets not connected</span>'}`;
-  if (!responses.length) {
-    list.innerHTML = `<div class="empty-state"><div class="icon">✦</div><h3>No responses yet</h3><p>Responses will appear here once people submit feedback.</p></div>`;
+  const list  = document.getElementById('resp-list');
+  const count = document.getElementById('resp-count');
+  const conn  = !!getSheetURL();
+  count.innerHTML = `<strong>${Rs.length}</strong> response${Rs.length!==1?'s':''} · ${conn?'<span style="color:#2d7a4f">✓ Google Sheets connected</span>':'<span style="color:var(--muted)">Google Sheets not connected</span>'}`;
+  if (!Rs.length) {
+    list.innerHTML = `<div class="empty"><div style="font-size:32px;margin-bottom:12px;">✦</div><h3>No responses yet</h3><p>Responses appear here once people submit.</p></div>`;
     return;
   }
   list.innerHTML = '';
-  [...responses].reverse().forEach(r => {
+  [...Rs].reverse().forEach(r => {
     const card = document.createElement('div');
-    card.className = 'response-card';
-    let answersHTML = '';
-    questions.forEach(q => {
-      const a = r.answers[q.id];
-      if (!a) return;
+    card.className = 'resp-card';
+    let body = '';
+    Qs.forEach(q => {
+      const a = r.answers[q.id]; if (!a) return;
       let aHTML = '';
-      if (q.type === 'scale') {
-        aHTML = `<div class="score-display"><span class="score-num">${a.score || '—'}</span><span class="score-max">/ 5</span></div>`;
-        if (a.comment) aHTML += `<div style="margin-top:8px;font-size:14px;color:var(--muted)">${a.comment}</div>`;
-      } else {
-        aHTML = `<div>${a.text || '<span style="color:var(--muted)">No response</span>'}</div>`;
-      }
-      answersHTML += `<div class="response-item"><div class="response-q">${q.text}</div><div class="response-a">${aHTML}</div></div>`;
+      if (q.type==='scale') {
+        aHTML = `<span class="resp-score">${a.score||'—'}</span><span style="font-size:13px;color:var(--muted)"> / 5</span>`;
+        if (a.comment) aHTML += `<div style="font-size:13px;color:var(--muted);margin-top:4px">${a.comment}</div>`;
+      } else { aHTML = a.text||'<span style="color:var(--muted)">No response</span>'; }
+      body += `<div class="resp-item"><div class="resp-q">${q.text}</div><div class="resp-a">${aHTML}</div></div>`;
     });
-    card.innerHTML = `<div class="response-card-header"><div class="respondent-name">${r.name}</div><div class="response-date">${r.date}</div></div>${answersHTML}`;
+    card.innerHTML = `<div class="resp-head"><div class="resp-name">${r.name}</div><div class="resp-date">${r.date}</div></div>${body}`;
     list.appendChild(card);
   });
 }
 
-// ── EXPORT CSV ──
-function exportCSV() {
-  if (!responses.length) { alert('No responses to export yet.'); return; }
-  const headers = ['Name', 'Date', ...questions.map((q, i) => `Q${i+1}: ${q.text}`)];
-  const rows = [headers.map(h => `"${h}"`).join(',')];
-  responses.forEach(r => {
-    const cols = [`"${r.name}"`, `"${r.date}"`];
-    questions.forEach(q => {
-      const a = r.answers[q.id] || {};
-      if (q.type === 'scale') cols.push(`"${a.score || ''} — ${(a.comment || '').replace(/"/g, '""')}"`);
-      else cols.push(`"${(a.text || '').replace(/"/g, '""')}"`);
-    });
-    rows.push(cols.join(','));
-  });
-  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'internality-feedback.csv';
-  a.click();
-}
-
-// ── DEFAULT CONTENT ──
-const DEFAULT_CONTENT = {
-  eyebrow: 'Internality Website',
-  headline: "We'd value your perspective.",
-  intro: 'Three brief questions about our website. Your input helps us communicate more effectively.',
-  thankyou: 'Your feedback has been received. We appreciate you taking the time.'
-};
-
-function loadContent() {
-  try { const s = localStorage.getItem('internality_content'); return s ? JSON.parse(s) : { ...DEFAULT_CONTENT }; } catch(e) { return { ...DEFAULT_CONTENT }; }
-}
-let pageContent = loadContent();
-
-function renderFormHeader() {
-  document.getElementById('form-eyebrow').textContent = pageContent.eyebrow;
-  document.getElementById('form-headline').innerHTML = pageContent.headline;
-  document.getElementById('form-intro').textContent = pageContent.intro;
-}
-
+// ── ADMIN: CONTENT ──
 function renderContentEditor() {
-  document.getElementById('content-eyebrow').value = pageContent.eyebrow;
-  document.getElementById('content-headline').value = pageContent.headline;
-  document.getElementById('content-intro').value = pageContent.intro;
-  document.getElementById('content-thankyou').value = pageContent.thankyou;
+  document.getElementById('c-eyebrow').value  = C.eyebrow;
+  document.getElementById('c-headline').value = C.headline.replace(/<[^>]+>/g,'');
+  document.getElementById('c-intro').value    = C.intro;
+  document.getElementById('c-thanks').value   = C.thanks;
 }
-
 function saveContent() {
-  pageContent.eyebrow = document.getElementById('content-eyebrow').value;
-  pageContent.headline = document.getElementById('content-headline').value;
-  pageContent.intro = document.getElementById('content-intro').value;
-  pageContent.thankyou = document.getElementById('content-thankyou').value;
-  try { localStorage.setItem('internality_content', JSON.stringify(pageContent)); } catch(e) {}
-  renderFormHeader();
-  document.getElementById('view-thanks').querySelector('p').textContent = pageContent.thankyou;
-  const msg = document.getElementById('saved-content-msg');
-  msg.classList.add('show');
-  setTimeout(() => msg.classList.remove('show'), 2500);
+  C.eyebrow  = document.getElementById('c-eyebrow').value;
+  C.headline = document.getElementById('c-headline').value;
+  C.intro    = document.getElementById('c-intro').value;
+  C.thanks   = document.getElementById('c-thanks').value;
+  ss(K.c, C);
+  renderForm();
+  flash('saved-content');
 }
 
-
+// ── ADMIN: QUESTIONS ──
 function renderQuestionsEditor() {
-  const container = document.getElementById('questions-editor');
-  container.innerHTML = '';
-  questions.forEach((q, i) => {
-    const div = document.createElement('div');
-    div.className = 'question-editor';
-    div.innerHTML = `
-      <div class="question-editor-header">
-        <div class="q-num">Question ${i + 1}</div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="q-type-badge" id="type-badge-${i}">${q.type === 'scale' ? '1–5 Scale' : q.type === 'short' ? 'Short text' : 'Open text'}</span>
-          ${i > 0 ? `<button onclick="moveQuestion(${i},-1)" title="Move up" style="background:none;border:1px solid var(--border);border-radius:2px;width:28px;height:28px;cursor:pointer;font-size:12px;color:var(--muted);">↑</button>` : ''}
-          ${i < questions.length-1 ? `<button onclick="moveQuestion(${i},1)" title="Move down" style="background:none;border:1px solid var(--border);border-radius:2px;width:28px;height:28px;cursor:pointer;font-size:12px;color:var(--muted);">↓</button>` : ''}
-          ${questions.length > 1 ? `<button onclick="deleteQuestion(${i})" title="Delete" style="background:none;border:1px solid #e0b0b0;border-radius:2px;width:28px;height:28px;cursor:pointer;font-size:12px;color:#c0392b;">✕</button>` : ''}
+  const wrap = document.getElementById('q-editor');
+  wrap.innerHTML = '';
+  Qs.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'editor-card';
+    const typeLabel = q.type==='scale' ? '1–5 Scale' : q.type==='short' ? 'Short text' : 'Open text';
+    let extra = '';
+    if (q.type === 'scale') {
+      extra = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;">
+        <input class="editor-input" id="qmin-${i}" value="${(q.scaleMin||'').replace(/"/g,'&quot;')}" placeholder="Scale label: low end" style="flex:1;margin-bottom:0;">
+        <input class="editor-input" id="qmax-${i}" value="${(q.scaleMax||'').replace(/"/g,'&quot;')}" placeholder="Scale label: high end" style="flex:1;margin-bottom:0;">
+      </div>`;
+    }
+    card.innerHTML = `
+      <div class="editor-head">
+        <div class="editor-label">Question ${i+1}</div>
+        <div class="q-actions">
+          <span class="editor-badge">${typeLabel}</span>
+          ${i>0                  ? `<button class="icon-btn" onclick="moveQ(${i},-1)">↑</button>`:''}
+          ${i<Qs.length-1        ? `<button class="icon-btn" onclick="moveQ(${i},1)">↓</button>`:''}
+          ${Qs.length>1          ? `<button class="icon-btn del" onclick="deleteQ(${i})">✕</button>`:''}
         </div>
       </div>
-      <input class="editor-input" id="q-text-${i}" value="${q.text.replace(/"/g,'&quot;')}" placeholder="Question text…">
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-        <select class="type-select" id="q-type-${i}" onchange="updateTypeBadge(${i})">
-          <option value="short" ${q.type==='short'?'selected':''}>Short text (1 line)</option>
-          <option value="text" ${q.type==='text'?'selected':''}>Open text (paragraph)</option>
-          <option value="scale" ${q.type==='scale'?'selected':''}>Scale (1–5)</option>
-        </select>
-        ${q.type==='scale'?`
-        <input class="editor-input" id="q-min-${i}" style="flex:1;margin-bottom:0;" value="${(q.scaleMin||'').replace(/"/g,'&quot;')}" placeholder="Label: low end">
-        <input class="editor-input" id="q-max-${i}" style="flex:1;margin-bottom:0;" value="${(q.scaleMax||'').replace(/"/g,'&quot;')}" placeholder="Label: high end">
-        `:''}
-      </div>`;
-    container.appendChild(div);
+      <input class="editor-input" id="qtxt-${i}" value="${q.text.replace(/"/g,'&quot;')}" placeholder="Question text…">
+      <select class="type-select" id="qtype-${i}" onchange="changeQType(${i})">
+        <option value="short" ${q.type==='short'?'selected':''}>Short text (1 line)</option>
+        <option value="text"  ${q.type==='text' ?'selected':''}>Open text (paragraph)</option>
+        <option value="scale" ${q.type==='scale'?'selected':''}>Scale (1–5)</option>
+      </select>
+      ${extra}`;
+    wrap.appendChild(card);
   });
-
-  // Add question button
-  const addBtn = document.createElement('button');
-  addBtn.className = 'export-btn';
-  addBtn.style.marginTop = '8px';
-  addBtn.innerHTML = '+ Add Question';
-  addBtn.onclick = addQuestion;
-  container.appendChild(addBtn);
-}
-function addQuestion() {
-  collectEditorValues();
-  const newId = 'q' + Date.now();
-  questions.push({ id: newId, text: '', type: 'short' });
-  renderQuestionsEditor();
-  // Scroll to new question
-  setTimeout(() => {
-    const inputs = document.querySelectorAll('.editor-input');
-    if (inputs.length) inputs[inputs.length - 2].focus();
-  }, 50);
-}
-function deleteQuestion(i) {
-  collectEditorValues();
-  questions.splice(i, 1);
-  renderQuestionsEditor();
-}
-function moveQuestion(i, dir) {
-  collectEditorValues();
-  const j = i + dir;
-  if (j < 0 || j >= questions.length) return;
-  [questions[i], questions[j]] = [questions[j], questions[i]];
-  renderQuestionsEditor();
 }
 
-function updateTypeBadge(i) {
-  collectEditorValues();
-  renderQuestionsEditor();
-}
-function collectEditorValues() {
-  questions.forEach((q, i) => {
-    const t = document.getElementById(`q-text-${i}`);
-    const ty = document.getElementById(`q-type-${i}`);
-    if (t) q.text = t.value;
+function collectQ() {
+  Qs.forEach((q,i) => {
+    const t  = document.getElementById(`qtxt-${i}`);
+    const ty = document.getElementById(`qtype-${i}`);
+    if (t)  q.text = t.value;
     if (ty) q.type = ty.value;
-    if (q.type === 'scale') {
-      const mn = document.getElementById(`q-min-${i}`);
-      const mx = document.getElementById(`q-max-${i}`);
+    if (q.type==='scale') {
+      const mn = document.getElementById(`qmin-${i}`);
+      const mx = document.getElementById(`qmax-${i}`);
       if (mn) q.scaleMin = mn.value;
       if (mx) q.scaleMax = mx.value;
     }
   });
 }
-function saveQuestions() {
-  collectEditorValues();
-  try { localStorage.setItem('internality_questions_v2', JSON.stringify(questions)); } catch(e) {}
-  renderForm();
-  const msg = document.getElementById('saved-msg');
-  msg.classList.add('show');
-  setTimeout(() => msg.classList.remove('show'), 2500);
+function changeQType(i) { collectQ(); renderQuestionsEditor(); }
+function addQuestion() {
+  collectQ();
+  Qs.push({ id:'q'+Date.now(), text:'', type:'short' });
+  renderQuestionsEditor();
+  setTimeout(()=>{ const cards=document.querySelectorAll('.editor-card'); if(cards.length) cards[cards.length-1].scrollIntoView({behavior:'smooth',block:'center'}); },80);
 }
+function deleteQ(i) { collectQ(); Qs.splice(i,1); renderQuestionsEditor(); }
+function moveQ(i,dir) {
+  collectQ();
+  const j=i+dir;
+  if(j<0||j>=Qs.length) return;
+  [Qs[i],Qs[j]]=[Qs[j],Qs[i]];
+  renderQuestionsEditor();
+}
+function saveQuestions() { collectQ(); ss(K.q,Qs); renderForm(); flash('saved-questions'); }
 
-// ── SETUP ──
+// ── ADMIN: SETUP ──
 function renderSetup() {
   const url = getSheetURL();
-  const statusEl = document.getElementById('connection-status');
-  const inputEl = document.getElementById('sheets-url');
-  if (url) {
-    inputEl.value = url;
-    statusEl.innerHTML = `<div class="connected-badge" style="margin-bottom:16px;">✓ Connected to Google Sheets</div>`;
-  } else {
-    statusEl.innerHTML = '';
-  }
+  document.getElementById('sheet-url').value = url;
+  document.getElementById('sheet-status').innerHTML = url ? `<div class="connected-badge">✓ Connected to Google Sheets</div>` : '';
 }
 function saveSheetURL() {
-  const url = document.getElementById('sheets-url').value.trim();
+  const url = document.getElementById('sheet-url').value.trim();
   if (!url) return;
-  localStorage.setItem('internality_sheet_url', url);
+  localStorage.setItem(K.url, url);
   renderSetup();
 }
-
-// ── PASSWORD ──
-function getStoredPassword() {
-  try { return localStorage.getItem('internality_admin_pw') || ''; } catch(e) { return ''; }
-}
-function showAdmin() {
-  const stored = getStoredPassword();
-  const modal = document.getElementById('password-modal');
-  const title = document.getElementById('modal-title');
-  const subtitle = document.getElementById('modal-subtitle');
-  const confirm = document.getElementById('password-confirm');
-  const input = document.getElementById('password-input');
-  document.getElementById('password-error').style.display = 'none';
-  input.value = '';
-  confirm.value = '';
-
-  if (!stored) {
-    // First time — set a password
-    title.textContent = 'Set Admin Password';
-    subtitle.textContent = 'Choose a password to protect your admin panel.';
-    confirm.style.display = 'block';
-  } else {
-    title.textContent = 'Admin Access';
-    subtitle.textContent = 'Enter your password to continue.';
-    confirm.style.display = 'none';
-  }
-  modal.style.display = 'flex';
-  setTimeout(() => input.focus(), 100);
-}
-function submitPassword() {
-  const stored = getStoredPassword();
-  const input = document.getElementById('password-input').value;
-  const confirm = document.getElementById('password-confirm').value;
-  const errEl = document.getElementById('password-error');
-
-  if (!stored) {
-    // Setting password for first time
-    if (!input) { errEl.textContent = 'Please enter a password.'; errEl.style.display = 'block'; return; }
-    if (input !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
-    try { localStorage.setItem('internality_admin_pw', input); } catch(e) {}
-    closeModal();
-    openAdmin();
-  } else {
-    if (input !== stored) { errEl.textContent = 'Incorrect password. Try again.'; errEl.style.display = 'block'; document.getElementById('password-input').value = ''; return; }
-    closeModal();
-    openAdmin();
-  }
-}
-function closeModal() {
-  document.getElementById('password-modal').style.display = 'none';
-}
-function openAdmin() {
-  renderResponses();
-  renderQuestionsEditor();
-  renderSetup();
-  renderContentEditor();
-  showView('view-admin');
-}
-// Allow Enter key in password modal
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.getElementById('password-modal').style.display === 'flex') {
-    submitPassword();
-  }
-});
-
-
-function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function changePassword() {
-  const newPw = document.getElementById('new-password').value.trim();
-  if (!newPw) return;
-  try { localStorage.setItem('internality_admin_pw', newPw); } catch(e) {}
-  document.getElementById('new-password').value = '';
-  const msg = document.getElementById('pw-change-msg');
-  msg.style.display = 'block';
-  setTimeout(() => msg.style.display = 'none', 2500);
+function updatePassword() {
+  const pw = document.getElementById('new-pw').value.trim();
+  if (!pw) return;
+  localStorage.setItem(K.pw, pw);
+  document.getElementById('new-pw').value = '';
+  const el = document.getElementById('pw-saved');
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none',2500);
 }
 
-function showForm() {
-  renderForm();
-  showView('view-form');
-}
-function switchTab(tab) {
-  ['responses','content','questions','setup'].forEach(t => {
-    document.getElementById(`panel-${t}`).style.display = t === tab ? 'block' : 'none';
-    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+// ── EXPORT CSV ──
+function exportCSV() {
+  if (!Rs.length) { alert('No responses yet.'); return; }
+  const hdrs = ['Name','Date',...Qs.map((q,i)=>`Q${i+1}: ${q.text}`)];
+  const rows = [hdrs.map(h=>`"${h}"`).join(',')];
+  Rs.forEach(r => {
+    const cols = [`"${r.name}"`,`"${r.date}"`];
+    Qs.forEach(q => {
+      const a = r.answers[q.id]||{};
+      if (q.type==='scale') cols.push(`"${a.score||''}${a.comment?' — '+a.comment:''}"`);
+      else cols.push(`"${(a.text||'').replace(/"/g,'""')}"`);
+    });
+    rows.push(cols.join(','));
   });
-  if (tab === 'questions') renderQuestionsEditor();
-  if (tab === 'responses') renderResponses();
-  if (tab === 'setup') renderSetup();
-  if (tab === 'content') renderContentEditor();
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='internality-feedback.csv'; a.click();
 }
+
+// ── NAV ──
+function showView(id) { document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function openAdmin() { renderResponses(); renderContentEditor(); renderQuestionsEditor(); renderSetup(); showView('view-admin'); }
+function goForm() { renderForm(); showView('view-form'); }
+function switchTab(name) {
+  ['responses','content','questions','setup'].forEach(t => {
+    document.getElementById(`panel-${t}`).classList.toggle('active', t===name);
+    document.getElementById(`tab-${t}`).classList.toggle('active', t===name);
+  });
+  if (name==='responses') renderResponses();
+  if (name==='content')   renderContentEditor();
+  if (name==='questions') renderQuestionsEditor();
+  if (name==='setup')     renderSetup();
+}
+function flash(id) { const el=document.getElementById(id); el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
 
 // ── INIT ──
-renderFormHeader();
 renderForm();
 </script>
 </body>

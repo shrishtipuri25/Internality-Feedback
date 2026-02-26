@@ -376,6 +376,19 @@
   <button class="admin-link" onclick="showAdmin()">Admin ↗</button>
 </header>
 
+<!-- PASSWORD MODAL -->
+<div id="password-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; display:none; align-items:center; justify-content:center;">
+  <div style="background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:40px; max-width:400px; width:90%; text-align:center;">
+    <div style="font-family:'Source Serif 4',serif; font-size:24px; font-weight:300; margin-bottom:8px;" id="modal-title">Admin Access</div>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:24px;" id="modal-subtitle">Enter your password to continue.</p>
+    <input type="password" id="password-input" placeholder="Password" style="width:100%; border:1px solid var(--border); border-radius:2px; padding:12px 16px; font-family:'Montserrat',sans-serif; font-size:14px; margin-bottom:8px; text-align:center; letter-spacing:0.1em;">
+    <div id="password-error" style="font-size:12px; color:#c0392b; margin-bottom:12px; display:none;">Incorrect password. Try again.</div>
+    <input type="password" id="password-confirm" placeholder="Confirm password" style="width:100%; border:1px solid var(--border); border-radius:2px; padding:12px 16px; font-family:'Montserrat',sans-serif; font-size:14px; margin-bottom:16px; text-align:center; letter-spacing:0.1em; display:none;">
+    <button onclick="submitPassword()" style="width:100%; background:var(--blue); color:white; border:none; padding:14px; font-family:'Montserrat',sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px;">Continue →</button>
+    <button onclick="closeModal()" style="margin-top:12px; background:none; border:none; font-size:12px; color:var(--muted); cursor:pointer; font-family:'Montserrat',sans-serif;">Cancel</button>
+  </div>
+</div>
+
 <!-- FORM VIEW -->
 <div id="view-form" class="view active">
   <div class="form-container">
@@ -499,6 +512,14 @@
           <button class="connect-btn" onclick="saveSheetURL()">Connect</button>
         </div>
         <p style="font-size:12px; color:var(--muted); margin-top:10px;">This URL is stored in your browser and never shared.</p>
+        <div style="margin-top:32px; padding-top:24px; border-top:1px solid var(--border);">
+          <div class="q-num" style="margin-bottom:12px;">Change Admin Password</div>
+          <div class="setup-url-row">
+            <input type="password" class="setup-url-input" id="new-password" placeholder="New password" />
+            <button class="connect-btn" onclick="changePassword()">Update</button>
+          </div>
+          <div id="pw-change-msg" style="font-size:12px; color:#2d7a4f; margin-top:8px; display:none;">✓ Password updated</div>
+        </div>
       </div>
     </div>
   </div>
@@ -791,18 +812,85 @@ function saveSheetURL() {
   renderSetup();
 }
 
-// ── NAVIGATION ──
-function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+// ── PASSWORD ──
+function getStoredPassword() {
+  try { return localStorage.getItem('internality_admin_pw') || ''; } catch(e) { return ''; }
 }
 function showAdmin() {
+  const stored = getStoredPassword();
+  const modal = document.getElementById('password-modal');
+  const title = document.getElementById('modal-title');
+  const subtitle = document.getElementById('modal-subtitle');
+  const confirm = document.getElementById('password-confirm');
+  const input = document.getElementById('password-input');
+  document.getElementById('password-error').style.display = 'none';
+  input.value = '';
+  confirm.value = '';
+
+  if (!stored) {
+    // First time — set a password
+    title.textContent = 'Set Admin Password';
+    subtitle.textContent = 'Choose a password to protect your admin panel.';
+    confirm.style.display = 'block';
+  } else {
+    title.textContent = 'Admin Access';
+    subtitle.textContent = 'Enter your password to continue.';
+    confirm.style.display = 'none';
+  }
+  modal.style.display = 'flex';
+  setTimeout(() => input.focus(), 100);
+}
+function submitPassword() {
+  const stored = getStoredPassword();
+  const input = document.getElementById('password-input').value;
+  const confirm = document.getElementById('password-confirm').value;
+  const errEl = document.getElementById('password-error');
+
+  if (!stored) {
+    // Setting password for first time
+    if (!input) { errEl.textContent = 'Please enter a password.'; errEl.style.display = 'block'; return; }
+    if (input !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
+    try { localStorage.setItem('internality_admin_pw', input); } catch(e) {}
+    closeModal();
+    openAdmin();
+  } else {
+    if (input !== stored) { errEl.textContent = 'Incorrect password. Try again.'; errEl.style.display = 'block'; document.getElementById('password-input').value = ''; return; }
+    closeModal();
+    openAdmin();
+  }
+}
+function closeModal() {
+  document.getElementById('password-modal').style.display = 'none';
+}
+function openAdmin() {
   renderResponses();
   renderQuestionsEditor();
   renderSetup();
   renderContentEditor();
   showView('view-admin');
 }
+// Allow Enter key in password modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('password-modal').style.display === 'flex') {
+    submitPassword();
+  }
+});
+
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function changePassword() {
+  const newPw = document.getElementById('new-password').value.trim();
+  if (!newPw) return;
+  try { localStorage.setItem('internality_admin_pw', newPw); } catch(e) {}
+  document.getElementById('new-password').value = '';
+  const msg = document.getElementById('pw-change-msg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 2500);
+}
+
 function showForm() {
   renderForm();
   showView('view-form');

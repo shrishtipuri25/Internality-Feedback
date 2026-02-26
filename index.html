@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internality — Feedback</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f7f4ef;
+    --gold: #b8935a;
+    --gold-light: #d4aa78;
+    --muted: #7a7570;
+    --border: #ddd8d0;
+    --surface: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .logo span { color: var(--gold); }
+  .admin-link {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s;
+  }
+  .admin-link:hover { color: var(--gold); }
+
+  /* ── FORM VIEW ── */
+  .form-container {
+    max-width: 680px;
+    margin: 80px auto;
+    padding: 0 24px;
+  }
+  .form-header { margin-bottom: 60px; }
+  .form-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 54px);
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .form-header h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .form-header p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 480px;
+  }
+  .divider {
+    width: 48px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px 0;
+  }
+
+  /* Questions */
+  .question-block {
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .question-block:nth-child(2) { animation-delay: 0.1s; }
+  .question-block:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+
+  /* Scale */
+  .scale-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .scale-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--ink);
+  }
+  .scale-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .scale-btn.selected { background: var(--gold); border-color: var(--gold); color: white; }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    padding: 0 2px;
+    max-width: 254px;
+  }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 2px;
+    padding: 16px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.2s;
+    line-height: 1.7;
+  }
+  textarea:focus { outline: none; border-color: var(--gold); }
+  textarea::placeholder { color: var(--muted); }
+
+  /* Optional comment */
+  .optional-comment { margin-top: 14px; }
+  .optional-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  /* Name field */
+  input[type="text"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 2px;
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink);
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus { outline: none; border-color: var(--gold); }
+  input[type="text"]::placeholder { color: var(--muted); }
+
+  /* Submit */
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 16px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 16px;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--gold); }
+  .submit-btn .arrow { transition: transform 0.2s; }
+  .submit-btn:hover .arrow { transform: translateX(4px); }
+
+  /* Thank you */
+  .thankyou {
+    text-align: center;
+    padding: 80px 24px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .thankyou .check {
+    font-size: 40px;
+    margin-bottom: 24px;
+  }
+  .thankyou h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    margin-bottom: 16px;
+  }
+  .thankyou p { color: var(--muted); line-height: 1.7; }
+
+  /* ── ADMIN VIEW ── */
+  .admin-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .admin-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+  }
+  .tabs {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .tab-btn {
+    padding: 10px 24px;
+    background: var(--surface);
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    border-right: 1px solid var(--border);
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn.active { background: var(--ink); color: white; }
+
+  /* Responses tab */
+  .response-count {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .response-count strong { color: var(--ink); font-weight: 500; }
+
+  .response-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.3s ease both;
+  }
+  .response-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .respondent-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .response-date { font-size: 12px; color: var(--muted); }
+
+  .response-item { margin-bottom: 20px; }
+  .response-q {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .response-a {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .score-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--gold);
+    font-weight: 300;
+  }
+  .score-max { font-size: 13px; color: var(--muted); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 36px; margin-bottom: 16px; }
+  .empty-state h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  /* Questions editor tab */
+  .question-editor {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 32px;
+    margin-bottom: 16px;
+  }
+  .question-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .q-num {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .q-type-badge {
+    font-size: 11px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .editor-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 12px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ink);
+    transition: border-color 0.2s;
+    background: var(--paper);
+    margin-bottom: 12px;
+  }
+  .editor-input:focus { outline: none; border-color: var(--gold); background: white; }
+  .type-select {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .type-select:focus { outline: none; border-color: var(--gold); }
+
+  .save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 12px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+  .save-btn:hover { background: var(--gold); }
+
+  .saved-msg {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #4a9e6b;
+    margin-left: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .saved-msg.show { opacity: 1; }
+
+  /* Export */
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .export-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .back-link {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-link:hover { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    header { padding: 20px 24px; }
+    .form-container { margin: 48px auto; }
+    .scale-group { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Inter<span>N</span>ality</div>
+  <button class="admin-link" onclick="showAdmin()">Admin ↗</button>
+</header>
+
+<!-- FORM VIEW -->
+<div id="view-form" class="view active">
+  <div class="form-container">
+    <div class="form-header">
+      <div class="q-label">Internality Platform</div>
+      <h1>We'd value<br><em>your perspective.</em></h1>
+      <div class="divider"></div>
+      <p>Three brief questions about what you saw. Your input shapes how we develop the platform.</p>
+    </div>
+
+    <div id="name-block" class="question-block">
+      <div class="q-label">Your Name</div>
+      <input type="text" id="respondent-name" placeholder="Name & Title (optional)">
+    </div>
+
+    <div id="questions-form"></div>
+
+    <button class="submit-btn" onclick="submitForm()">
+      Submit Feedback <span class="arrow">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- THANK YOU VIEW -->
+<div id="view-thanks" class="view">
+  <div class="thankyou">
+    <div class="check">✦</div>
+    <h2>Thank you.</h2>
+    <p>Your feedback has been received and will help us build a more effective platform. We appreciate you taking the time.</p>
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div id="view-admin" class="view">
+  <div class="admin-container">
+    <div class="admin-header">
+      <div>
+        <button class="back-link" onclick="showForm()">← Back to form</button>
+        <h2 style="margin-top:12px">Admin Dashboard</h2>
+      </div>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
+        <div class="tabs">
+          <button class="tab-btn active" id="tab-responses" onclick="switchTab('responses')">Responses</button>
+          <button class="tab-btn" id="tab-questions" onclick="switchTab('questions')">Edit Questions</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-responses">
+      <div class="response-count" id="response-count"></div>
+      <div id="responses-list"></div>
+    </div>
+
+    <div id="panel-questions" style="display:none;">
+      <div id="questions-editor"></div>
+      <button class="save-btn" onclick="saveQuestions()">Save Questions</button>
+      <span class="saved-msg" id="saved-msg">✓ Saved</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DEFAULT QUESTIONS ──
+const DEFAULT_QUESTIONS = [
+  {
+    id: 'q1',
+    text: 'How clearly did the platform communicate its value to your organization?',
+    type: 'scale',
+    scaleMin: 'Not at all clear',
+    scaleMax: 'Extremely clear'
+  },
+  {
+    id: 'q2',
+    text: 'What, if anything, was unclear or missing from what you saw?',
+    type: 'text'
+  },
+  {
+    id: 'q3',
+    text: 'How likely are you to explore Internality further?',
+    type: 'scale',
+    scaleMin: 'Not likely',
+    scaleMax: 'Very likely'
+  }
+];
+
+// ── STATE ──
+let questions = loadQuestions();
+let responses = loadResponses();
+let formAnswers = {};
+
+function loadQuestions() {
+  try {
+    const s = localStorage.getItem('internality_questions');
+    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_QUESTIONS)); }
+}
+function saveQuestionsToStorage(qs) {
+  try { localStorage.setItem('internality_questions', JSON.stringify(qs)); } catch(e) {}
+}
+function loadResponses() {
+  try {
+    const s = localStorage.getItem('internality_responses');
+    return s ? JSON.parse(s) : [];
+  } catch(e) { return []; }
+}
+function saveResponsesToStorage() {
+  try { localStorage.setItem('internality_responses', JSON.stringify(responses)); } catch(e) {}
+}
+
+// ── RENDER FORM ──
+function renderForm() {
+  const container = document.getElementById('questions-form');
+  container.innerHTML = '';
+  questions.forEach((q, i) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.style.animationDelay = (i * 0.1 + 0.1) + 's';
+
+    let inputHTML = '';
+    if (q.type === 'scale') {
+      let btns = '';
+      for (let n = 1; n <= 5; n++) {
+        btns += `<button class="scale-btn" data-q="${q.id}" data-val="${n}" onclick="selectScale('${q.id}', ${n}, this)">${n}</button>`;
+      }
+      inputHTML = `
+        <div class="scale-group">${btns}</div>
+        <div class="scale-labels">
+          <span>${q.scaleMin || 'Low'}</span>
+          <span>${q.scaleMax || 'High'}</span>
+        </div>
+        <div class="optional-comment">
+          <div class="optional-label">Comment (optional)</div>
+          <textarea placeholder="Any additional thoughts…" oninput="formAnswers['${q.id}_comment']=this.value" rows="3"></textarea>
+        </div>`;
+    } else {
+      inputHTML = `<textarea placeholder="Your response…" oninput="formAnswers['${q.id}']=this.value" rows="4"></textarea>`;
+    }
+
+    block.innerHTML = `
+      <div class="q-label">Question ${i + 1}</div>
+      <div class="q-text">${q.text}</div>
+      ${inputHTML}`;
+    container.appendChild(block);
+  });
+}
+
+function selectScale(qId, val, btn) {
+  formAnswers[qId] = val;
+  document.querySelectorAll(`[data-q="${qId}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ── SUBMIT ──
+function submitForm() {
+  const name = document.getElementById('respondent-name').value.trim() || 'Anonymous';
+  const entry = {
+    name,
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    answers: {}
+  };
+  questions.forEach(q => {
+    if (q.type === 'scale') {
+      entry.answers[q.id] = { score: formAnswers[q.id] || null, comment: formAnswers[q.id + '_comment'] || '' };
+    } else {
+      entry.answers[q.id] = { text: formAnswers[q.id] || '' };
+    }
+  });
+  responses.push(entry);
+  saveResponsesToStorage();
+  showView('view-thanks');
+}
+
+// ── ADMIN ──
+function renderResponses() {
+  const list = document.getElementById('responses-list');
+  const count = document.getElementById('response-count');
+  count.innerHTML = `<strong>${responses.length}</strong> response${responses.length !== 1 ? 's' : ''} received`;
+  if (!responses.length) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">✦</div><h3>No responses yet</h3><p>Responses will appear here once people submit feedback.</p></div>`;
+    return;
+  }
+  list.innerHTML = '';
+  [...responses].reverse().forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = 'response-card';
+    let answersHTML = '';
+    questions.forEach(q => {
+      const a = r.answers[q.id];
+      if (!a) return;
+      let aHTML = '';
+      if (q.type === 'scale') {
+        aHTML = `<div class="score-display"><span class="score-num">${a.score || '—'}</span><span class="score-max">/ 5</span></div>`;
+        if (a.comment) aHTML += `<div style="margin-top:8px; font-size:14px; color:var(--muted)">${a.comment}</div>`;
+      } else {
+        aHTML = `<div>${a.text || '<span style="color:var(--muted)">No response</span>'}</div>`;
+      }
+      answersHTML += `<div class="response-item"><div class="response-q">${q.text}</div><div class="response-a">${aHTML}</div></div>`;
+    });
+    card.innerHTML = `
+      <div class="response-card-header">
+        <div class="respondent-name">${r.name}</div>
+        <div class="response-date">${r.date}</div>
+      </div>
+      ${answersHTML}`;
+    list.appendChild(card);
+  });
+}
+
+function renderQuestionsEditor() {
+  const container = document.getElementById('questions-editor');
+  container.innerHTML = '';
+  questions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'question-editor';
+    div.innerHTML = `
+      <div class="question-editor-header">
+        <div class="q-num">Question ${i + 1}</div>
+        <span class="q-type-badge" id="type-badge-${i}">${q.type === 'scale' ? '1–5 Scale' : 'Open text'}</span>
+      </div>
+      <input class="editor-input" id="q-text-${i}" value="${q.text}" placeholder="Question text…">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <select class="type-select" id="q-type-${i}" onchange="updateTypeBadge(${i})">
+          <option value="scale" ${q.type === 'scale' ? 'selected' : ''}>Scale (1–5)</option>
+          <option value="text" ${q.type === 'text' ? 'selected' : ''}>Open text</option>
+        </select>
+        ${q.type === 'scale' ? `
+        <input class="editor-input" id="q-min-${i}" style="flex:1; margin-bottom:0;" value="${q.scaleMin || ''}" placeholder="Scale label: low end">
+        <input class="editor-input" id="q-max-${i}" style="flex:1; margin-bottom:0;" value="${q.scaleMax || ''}" placeholder="Scale label: high end">` : ''}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function updateTypeBadge(i) {
+  const sel = document.getElementById(`q-type-${i}`);
+  const badge = document.getElementById(`type-badge-${i}`);
+  badge.textContent = sel.value === 'scale' ? '1–5 Scale' : 'Open text';
+  // re-render to show/hide scale label fields
+  saveAndRerenderEditor();
+}
+
+function saveAndRerenderEditor() {
+  collectEditorValues();
+  renderQuestionsEditor();
+}
+
+function collectEditorValues() {
+  questions.forEach((q, i) => {
+    const textEl = document.getElementById(`q-text-${i}`);
+    const typeEl = document.getElementById(`q-type-${i}`);
+    if (textEl) q.text = textEl.value;
+    if (typeEl) q.type = typeEl.value;
+    if (q.type === 'scale') {
+      const minEl = document.getElementById(`q-min-${i}`);
+      const maxEl = document.getElementById(`q-max-${i}`);
+      if (minEl) q.scaleMin = minEl.value;
+      if (maxEl) q.scaleMax = maxEl.value;
+    }
+  });
+}
+
+function saveQuestions() {
+  collectEditorValues();
+  saveQuestionsToStorage(questions);
+  formAnswers = {};
+  renderForm();
+  const msg = document.getElementById('saved-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2500);
+}
+
+// ── EXPORT CSV ──
+function exportCSV() {
+  if (!responses.length) return alert('No responses to export yet.');
+  const headers = ['Name', 'Date', ...questions.map((q, i) => `Q${i+1}: ${q.text}${q.type === 'scale' ? ' (Score)' : ''}`, ...questions.filter(q => q.type === 'scale').map(q => `Comment`))];
+  
+  const rows = [headers.join(',')];
+  responses.forEach(r => {
+    const cols = [r.name, r.date];
+    questions.forEach(q => {
+      const a = r.answers[q.id] || {};
+      if (q.type === 'scale') {
+        cols.push(a.score || '');
+      } else {
+        cols.push(`"${(a.text || '').replace(/"/g, '""')}"`);
+      }
+    });
+    questions.filter(q => q.type === 'scale').forEach(q => {
+      const a = r.answers[q.id] || {};
+      cols.push(`"${(a.comment || '').replace(/"/g, '""')}"`);
+    });
+    rows.push(cols.join(','));
+  });
+
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'internality-feedback.csv';
+  a.click();
+}
+
+// ── NAVIGATION ──
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showAdmin() {
+  renderResponses();
+  renderQuestionsEditor();
+  showView('view-admin');
+}
+function showForm() {
+  renderForm();
+  showView('view-form');
+}
+function switchTab(tab) {
+  document.getElementById('panel-responses').style.display = tab === 'responses' ? 'block' : 'none';
+  document.getElementById('panel-questions').style.display = tab === 'questions' ? 'block' : 'none';
+  document.getElementById('tab-responses').classList.toggle('active', tab === 'responses');
+  document.getElementById('tab-questions').classList.toggle('active', tab === 'questions');
+  if (tab === 'questions') renderQuestionsEditor();
+  if (tab === 'responses') renderResponses();
+}
+
+// ── INIT ──
+renderForm();
+</script>
+</body>
+</html>

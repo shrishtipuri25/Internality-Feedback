@@ -177,9 +177,19 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     <p class="form-intro" id="f-intro">Three brief questions about our website. Your input helps us communicate more effectively.</p>
 
     <div class="q-block">
-      <div class="q-num">Your Name <span style="color:#c0392b">*</span></div>
-      <input type="text" id="f-name" placeholder="Name &amp; Title">
-      <div class="field-error" id="name-err">Please enter your name to continue.</div>
+      <div class="q-num" style="margin-bottom:16px;">About You</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div>
+          <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;" id="label-name">Name <span style="color:#c0392b">*</span></div>
+          <input type="text" id="f-name" placeholder="Your full name">
+          <div class="field-error" id="name-err">Please enter your name.</div>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;" id="label-company">Company <span style="color:#c0392b">*</span></div>
+          <input type="text" id="f-company" placeholder="Company name">
+          <div class="field-error" id="company-err">Please enter your company.</div>
+        </div>
+      </div>
     </div>
 
     <div id="questions-container"></div>
@@ -238,6 +248,18 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
         <div class="editor-card">
           <div class="editor-head"><div class="editor-label">Thank you message</div><span class="editor-badge">After submission</span></div>
           <textarea class="editor-input" id="c-thanks" rows="3" style="resize:vertical;"></textarea>
+        </div>
+        <div class="editor-card">
+          <div class="editor-head"><div class="editor-label">Name field label</div><span class="editor-badge">Respondent field</span></div>
+          <input class="editor-input" id="c-name-label" placeholder="e.g. Name">
+          <div class="editor-head" style="margin-top:12px;"><div class="editor-label">Name placeholder</div></div>
+          <input class="editor-input" id="c-name-placeholder" placeholder="e.g. Your full name">
+        </div>
+        <div class="editor-card">
+          <div class="editor-head"><div class="editor-label">Company field label</div><span class="editor-badge">Respondent field</span></div>
+          <input class="editor-input" id="c-company-label" placeholder="e.g. Company">
+          <div class="editor-head" style="margin-top:12px;"><div class="editor-label">Company placeholder</div></div>
+          <input class="editor-input" id="c-company-placeholder" placeholder="e.g. Company name">
         </div>
         <button class="save-btn" onclick="saveContent()">Save Content</button>
         <span class="saved-msg" id="saved-content">✓ Saved</span>
@@ -300,10 +322,14 @@ const DEFAULT_Q = [
 ];
 
 const DEFAULT_C = {
-  eyebrow:  'Internality Website',
-  headline: "We'd value <em>your perspective.</em>",
-  intro:    'Three brief questions about our website. Your input helps us communicate more effectively.',
-  thanks:   'Your feedback has been received. We appreciate you taking the time.'
+  eyebrow:            'Internality Website',
+  headline:           "We'd value <em>your perspective.</em>",
+  intro:              'Three brief questions about our website. Your input helps us communicate more effectively.',
+  thanks:             'Your feedback has been received. We appreciate you taking the time.',
+  nameLabel:          'Name',
+  namePlaceholder:    'Your full name',
+  companyLabel:       'Company',
+  companyPlaceholder: 'Company name'
 };
 
 // ── LOAD / SAVE ──
@@ -324,8 +350,15 @@ function renderForm() {
   document.getElementById('f-headline').innerHTML   = C.headline;
   document.getElementById('f-intro').textContent    = C.intro;
   document.getElementById('thanks-msg').textContent = C.thanks;
-  document.getElementById('f-name').value = '';
-  document.getElementById('name-err').style.display = 'none';
+  document.getElementById('f-name').value    = '';
+  document.getElementById('f-company').value = '';
+  document.getElementById('name-err').style.display    = 'none';
+  document.getElementById('company-err').style.display = 'none';
+  // Apply editable labels
+  document.getElementById('label-name').innerHTML    = `${C.nameLabel||'Name'} <span style="color:#c0392b">*</span>`;
+  document.getElementById('label-company').innerHTML = `${C.companyLabel||'Company'} <span style="color:#c0392b">*</span>`;
+  document.getElementById('f-name').placeholder    = C.namePlaceholder    || 'Your full name';
+  document.getElementById('f-company').placeholder = C.companyPlaceholder || 'Company name';
   A = {};
 
   const wrap = document.getElementById('questions-container');
@@ -359,18 +392,20 @@ function pickScale(qId, val, btn) {
 
 // ── SUBMIT ──
 async function submitForm() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) {
-    document.getElementById('name-err').style.display = 'block';
-    document.getElementById('f-name').focus();
-    return;
-  }
-  document.getElementById('name-err').style.display = 'none';
+  const name    = document.getElementById('f-name').value.trim();
+  const company = document.getElementById('f-company').value.trim();
+  let valid = true;
+  if (!name)    { document.getElementById('name-err').style.display='block';    document.getElementById('f-name').focus();    valid=false; }
+  else            document.getElementById('name-err').style.display='none';
+  if (!company) { document.getElementById('company-err').style.display='block'; if(valid) document.getElementById('f-company').focus(); valid=false; }
+  else            document.getElementById('company-err').style.display='none';
+  if (!valid) return;
+
   const btn = document.getElementById('submit-btn');
   btn.disabled = true; btn.textContent = 'Sending…';
 
-  const entry = { name, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), answers:{} };
-  const payload = { name };
+  const entry = { name, company, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), answers:{} };
+  const payload = { name, company };
   Qs.forEach(q => {
     if (q.type === 'scale') {
       entry.answers[q.id] = { score: A[q.id]||null, comment: A[q.id+'_c']||'' };
@@ -448,23 +483,37 @@ function renderResponses() {
       } else { aHTML = a.text||'<span style="color:var(--muted)">No response</span>'; }
       body += `<div class="resp-item"><div class="resp-q">${q.text}</div><div class="resp-a">${aHTML}</div></div>`;
     });
-    card.innerHTML = `<div class="resp-head"><div class="resp-name">${r.name}</div><div class="resp-date">${r.date}</div></div>${body}`;
+    card.innerHTML = `<div class="resp-head">
+      <div>
+        <div class="resp-name">${r.name}</div>
+        ${r.title||r.company ? `<div style="font-size:13px;color:var(--muted);margin-top:3px;">${[r.title,r.company].filter(Boolean).join(' · ')}</div>` : ''}
+      </div>
+      <div class="resp-date">${r.date}</div>
+    </div>${body}`;
     list.appendChild(card);
   });
 }
 
 // ── ADMIN: CONTENT ──
 function renderContentEditor() {
-  document.getElementById('c-eyebrow').value  = C.eyebrow;
-  document.getElementById('c-headline').value = C.headline.replace(/<[^>]+>/g,'');
-  document.getElementById('c-intro').value    = C.intro;
-  document.getElementById('c-thanks').value   = C.thanks;
+  document.getElementById('c-eyebrow').value            = C.eyebrow;
+  document.getElementById('c-headline').value           = C.headline.replace(/<[^>]+>/g,'');
+  document.getElementById('c-intro').value              = C.intro;
+  document.getElementById('c-thanks').value             = C.thanks;
+  document.getElementById('c-name-label').value         = C.nameLabel        || 'Name';
+  document.getElementById('c-name-placeholder').value   = C.namePlaceholder  || 'Your full name';
+  document.getElementById('c-company-label').value      = C.companyLabel     || 'Company';
+  document.getElementById('c-company-placeholder').value= C.companyPlaceholder || 'Company name';
 }
 function saveContent() {
-  C.eyebrow  = document.getElementById('c-eyebrow').value;
-  C.headline = document.getElementById('c-headline').value;
-  C.intro    = document.getElementById('c-intro').value;
-  C.thanks   = document.getElementById('c-thanks').value;
+  C.eyebrow             = document.getElementById('c-eyebrow').value;
+  C.headline            = document.getElementById('c-headline').value;
+  C.intro               = document.getElementById('c-intro').value;
+  C.thanks              = document.getElementById('c-thanks').value;
+  C.nameLabel           = document.getElementById('c-name-label').value;
+  C.namePlaceholder     = document.getElementById('c-name-placeholder').value;
+  C.companyLabel        = document.getElementById('c-company-label').value;
+  C.companyPlaceholder  = document.getElementById('c-company-placeholder').value;
   ss(K.c, C);
   renderForm();
   flash('saved-content');
@@ -562,10 +611,10 @@ function updatePassword() {
 // ── EXPORT CSV ──
 function exportCSV() {
   if (!Rs.length) { alert('No responses yet.'); return; }
-  const hdrs = ['Name','Date',...Qs.map((q,i)=>`Q${i+1}: ${q.text}`)];
+  const hdrs = ['Name','Company','Date',...Qs.map((q,i)=>`Q${i+1}: ${q.text}`)];
   const rows = [hdrs.map(h=>`"${h}"`).join(',')];
   Rs.forEach(r => {
-    const cols = [`"${r.name}"`,`"${r.date}"`];
+    const cols = [`"${r.name}"`,`"${r.company||''}"`,`"${r.date}"`];
     Qs.forEach(q => {
       const a = r.answers[q.id]||{};
       if (q.type==='scale') cols.push(`"${a.score||''}${a.comment?' — '+a.comment:''}"`);

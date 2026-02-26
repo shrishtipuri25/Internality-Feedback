@@ -380,15 +380,16 @@
 <div id="view-form" class="view active">
   <div class="form-container">
     <div class="form-header">
-      <div class="q-label">Internality Website</div>
-      <h1>We'd value<br><em>your perspective.</em></h1>
+      <div class="q-label" id="form-eyebrow"></div>
+      <h1 id="form-headline"></h1>
       <div class="divider"></div>
-      <p>Three brief questions about our website. Your input helps us communicate more effectively.</p>
+      <p id="form-intro"></p>
     </div>
 
     <div class="question-block">
-      <div class="q-label">Your Name</div>
-      <input type="text" id="respondent-name" placeholder="Name & Title (optional)">
+      <div class="q-label">Your Name <span style="color:#c0392b;">*</span></div>
+      <input type="text" id="respondent-name" placeholder="Name & Title">
+      <div id="name-error" style="display:none; font-size:12px; color:#c0392b; margin-top:6px;">Please enter your name to continue.</div>
     </div>
 
     <div id="questions-form"></div>
@@ -421,6 +422,7 @@
         <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
         <div class="tabs">
           <button class="tab-btn active" id="tab-responses" onclick="switchTab('responses')">Responses</button>
+          <button class="tab-btn" id="tab-content" onclick="switchTab('content')">Edit Content</button>
           <button class="tab-btn" id="tab-questions" onclick="switchTab('questions')">Edit Questions</button>
           <button class="tab-btn" id="tab-setup" onclick="switchTab('setup')">⚙ Setup</button>
         </div>
@@ -431,6 +433,42 @@
     <div id="panel-responses">
       <div class="response-count" id="response-count"></div>
       <div id="responses-list"></div>
+    </div>
+
+    <!-- CONTENT PANEL -->
+    <div id="panel-content" style="display:none;">
+      <div style="max-width:600px;">
+        <div class="question-editor">
+          <div class="question-editor-header">
+            <div class="q-num">Eyebrow Label</div>
+            <span class="q-type-badge">Small text above headline</span>
+          </div>
+          <input class="editor-input" id="content-eyebrow" placeholder="e.g. Internality Website">
+        </div>
+        <div class="question-editor">
+          <div class="question-editor-header">
+            <div class="q-num">Headline</div>
+            <span class="q-type-badge">Main heading</span>
+          </div>
+          <input class="editor-input" id="content-headline" placeholder="e.g. We'd value your perspective.">
+        </div>
+        <div class="question-editor">
+          <div class="question-editor-header">
+            <div class="q-num">Intro Text</div>
+            <span class="q-type-badge">Paragraph below headline</span>
+          </div>
+          <textarea class="editor-input" id="content-intro" rows="3" style="resize:vertical;" placeholder="e.g. Three brief questions about our website…"></textarea>
+        </div>
+        <div class="question-editor">
+          <div class="question-editor-header">
+            <div class="q-num">Thank You Message</div>
+            <span class="q-type-badge">Shown after submission</span>
+          </div>
+          <textarea class="editor-input" id="content-thankyou" rows="3" style="resize:vertical;" placeholder="e.g. Your feedback has been received…"></textarea>
+        </div>
+        <button class="save-btn" onclick="saveContent()">Save Content</button>
+        <span class="saved-msg" id="saved-content-msg">✓ Saved</span>
+      </div>
     </div>
 
     <!-- QUESTIONS PANEL -->
@@ -535,7 +573,15 @@ function selectScale(qId, val, btn) {
 
 // ── SUBMIT ──
 async function submitForm() {
-  const name = document.getElementById('respondent-name').value.trim() || 'Anonymous';
+  const name = document.getElementById('respondent-name').value.trim();
+  const nameError = document.getElementById('name-error');
+
+  if (!name) {
+    nameError.style.display = 'block';
+    document.getElementById('respondent-name').focus();
+    return;
+  }
+  nameError.style.display = 'none';
   const btn = document.getElementById('submit-btn');
   const errEl = document.getElementById('error-msg');
   errEl.style.display = 'none';
@@ -634,7 +680,46 @@ function exportCSV() {
   a.click();
 }
 
-// ── QUESTIONS EDITOR ──
+// ── DEFAULT CONTENT ──
+const DEFAULT_CONTENT = {
+  eyebrow: 'Internality Website',
+  headline: "We'd value your perspective.",
+  intro: 'Three brief questions about our website. Your input helps us communicate more effectively.',
+  thankyou: 'Your feedback has been received. We appreciate you taking the time.'
+};
+
+function loadContent() {
+  try { const s = localStorage.getItem('internality_content'); return s ? JSON.parse(s) : { ...DEFAULT_CONTENT }; } catch(e) { return { ...DEFAULT_CONTENT }; }
+}
+let pageContent = loadContent();
+
+function renderFormHeader() {
+  document.getElementById('form-eyebrow').textContent = pageContent.eyebrow;
+  document.getElementById('form-headline').innerHTML = pageContent.headline;
+  document.getElementById('form-intro').textContent = pageContent.intro;
+}
+
+function renderContentEditor() {
+  document.getElementById('content-eyebrow').value = pageContent.eyebrow;
+  document.getElementById('content-headline').value = pageContent.headline;
+  document.getElementById('content-intro').value = pageContent.intro;
+  document.getElementById('content-thankyou').value = pageContent.thankyou;
+}
+
+function saveContent() {
+  pageContent.eyebrow = document.getElementById('content-eyebrow').value;
+  pageContent.headline = document.getElementById('content-headline').value;
+  pageContent.intro = document.getElementById('content-intro').value;
+  pageContent.thankyou = document.getElementById('content-thankyou').value;
+  try { localStorage.setItem('internality_content', JSON.stringify(pageContent)); } catch(e) {}
+  renderFormHeader();
+  document.getElementById('view-thanks').querySelector('p').textContent = pageContent.thankyou;
+  const msg = document.getElementById('saved-content-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2500);
+}
+
+
 function renderQuestionsEditor() {
   const container = document.getElementById('questions-editor');
   container.innerHTML = '';
@@ -715,6 +800,7 @@ function showAdmin() {
   renderResponses();
   renderQuestionsEditor();
   renderSetup();
+  renderContentEditor();
   showView('view-admin');
 }
 function showForm() {
@@ -722,16 +808,18 @@ function showForm() {
   showView('view-form');
 }
 function switchTab(tab) {
-  ['responses','questions','setup'].forEach(t => {
+  ['responses','content','questions','setup'].forEach(t => {
     document.getElementById(`panel-${t}`).style.display = t === tab ? 'block' : 'none';
     document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
   });
   if (tab === 'questions') renderQuestionsEditor();
   if (tab === 'responses') renderResponses();
   if (tab === 'setup') renderSetup();
+  if (tab === 'content') renderContentEditor();
 }
 
 // ── INIT ──
+renderFormHeader();
 renderForm();
 </script>
 </body>
